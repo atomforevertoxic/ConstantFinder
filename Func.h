@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
-//#include <stack>
-//#include <set>
-//#include <list>
-//#include <vector>
+#include <stack>
+#include <set>
+#include <list>
+#include <vector>
 
 
 using namespace std;
@@ -61,4 +61,101 @@ public:
     };
 
 };
+
+/*!
+* \Считывание текста из файла
+* \param[in] pathAndName - путь и название вводимого .cpp файла
+* \return - список строк, представляющий текст кода из файла .cpp
+*/
+list<string> getTextFromFile(const string pathAndName);
+
+/*!
+* Валидация входные данные
+* \param[in] codeText - список строк, представляющий текст кода из файла .cpp
+* \param[in] error - структура поиска ошибок
+* \return - вектор всех найденных ошибок
+*/
+vector<string> isInputDataValid(const list<string>& codeText, ErrorInfo& error);
+
+/*!
+* Поиск константы и путь до них (главная вычислительная функция)
+* \param[in] codeText - список строк, представляющий текст кода из файла .cpp
+* \return - список строковых констант и их расположений
+*/
+multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
+
+/*!
+* Удаление всех комментариев из строки
+* \param[in][out] strToExecute - строка, в которой производится удаление
+* \return - логическое значение закомментированности след. строк
+*/
+bool removeAllCommentsFromString(string& strToExecute);
+
+
+/*!
+* Получение самого левого(первого) комментария в строке
+* \param[in] strToResearch - строка, в которой производится поиск
+* \return - позиции самого левого(первого) комментария
+*/
+SubstrPos getLeftmostComment(string& strToResearch);
+
+/*!
+* Определение, находится ли  стр. константа раньше комментариев
+* \param[in] strToSearch - строка, в которой производится поиск
+* \return - результат логического произведения событий существования строковой константы
+*           и значение первентсва значения стр. константы среди комментариев
+*/
+bool isConstFindsEarlierThanComments(const string& strToSearch);
+
+/*!
+* Получение начальной позиции подстроки или значения по-умолчанию
+* \param[in] strToCheck - строка, в которой производится поиск подстроки
+* \param[in] substrToFind - подстрока, которую требуется найти в строке
+* \param[in] startSearching - позиция, с которой начинается поиск
+* \return - индекс начала подстроки или значение по-умолчанию, если подстрока не найдена в строке
+*/
+int getSubstrPositionOrDefaultValue(const string& strToCheck, const string& substrToFind, int startSearching);
+
+/*!
+* Затирание подстроки пробелами
+* \param[in][out] strToExecute - строка, в которой производится затирание
+* \param[in] pos - позиции затираемой подстроки
+*/
+void cleanSubstrBySpaces(string& strToClean, SubstrPos pos);
+
+/*!
+* Поиск всех ключевых объектов в строке
+* \param[in] str - строка, в которой производится поиск
+* \return - список позиций подстрок всех ключевых объектов
+*/
+list<SubstrPos>getAllKeyObjectsIndexes(const string& str);
+
+/*!
+* Поиск позиций имени пространства имен/объединения/класса/структуры
+* \param[in] strToCheck - строка, в которой определяются позиции имени объявления
+* \param[in] keyWord - ключевое слово для поиска
+* \return начальная и конечная позиции имени пространства имен/класса/структуры/объединения
+*/
+SubstrPos getDeclarNamePosition(const string& strToCheck, const string& keyWord);
+
+/*!
+* Определение позиций имени функции
+* \param[in] strToCheck - строка, в которой определяются позиции имени функции
+* \return - начальная и конечная позиции имени функции
+*/
+SubstrPos getFuncNamePosition(const string& strToCheck);
+
+/*!
+* Поиск позиций всех парных круглых скобок в строке
+* \param[in] strToSearch - строка, в которой определяются позиции парных круглых скобок
+* \return - все позиции парных круглых скобок
+*/
+list<SubstrPos> getAllBracketsPos(const string& strToSearch);
+
+/*!
+* Определение позиций строковой константы
+* \param[in] strToCheck - строка, в которой определяются позиции строковой константы
+* \return - начальная и конечные позиции строковой константы
+*/
+SubstrPos findPairStrConstPositions(const string& strToCheck);
 

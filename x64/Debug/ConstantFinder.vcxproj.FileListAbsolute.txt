@@ -1,1 +1,2 @@
 D:\toGit\ConstantFinder\x64\Debug\ConstantFinder.exe
+C:\Users\Иван\source\repos\ConstantFinder\x64\Debug\ConstantFinder.exe
