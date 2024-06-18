@@ -40,3 +40,10 @@ list<string> getTextFromFile(const string pathAndName, ErrorInfo& error)
 
     return textCode;
 }
+
+
+vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
+{
+    vector<ErrorInfo> vect;
+    return vect;
+}
