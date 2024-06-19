@@ -98,7 +98,7 @@ SubstrPos getLeftmostComment(string& strToResearch)
     while (isConstFindsEarlierThanComments(strToResearch, startSearchingForLeftmostComma))
     {
         //Начало поиска равна позиции конца строковой константы +1
-        int newStartPos = getSubstrPositionOrDefaultValue(strToResearch, "\"", startSearchingForLeftmostComma) + 2;
+        int newStartPos = findPairStrConstPositions(strToResearch, startSearchingForLeftmostComma).right+2;
         startSearchingForLeftmostComma = newStartPos;
     }
 
@@ -169,7 +169,45 @@ bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearchi
 
 SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching)
 {
-    return SubstrPos();
+    //Найти позицию начала строковой константы
+    int startStrConstIndex = getSubstrPositionOrDefaultValue(strToCheck, "\"", startSearching);
+    
+    //Найти позицию конца строковой константы
+    int endStrConstIndex = getSubstrPositionOrDefaultValue(strToCheck, "\"", startStrConstIndex + 1);
+    
+    //Пока конец строковой константы указывает на экранированный обратный слэш
+    while (strToCheck[endStrConstIndex - 1] == *"\\")
+    {
+        //Счетчик знаков обратного слэша
+        int backSlashCounter = 0;
+        
+        //Начало подсчета начинается с обратного слэша экранированной кавычки
+        int newBackCounter = endStrConstIndex - 1;
+
+        //Пока символ - обратный слэш
+        while (strToCheck[newBackCounter] == *"\\")
+        {
+            //Увеличить счетчик обратных слэшей
+            backSlashCounter++;
+            
+            //Переход к предыдущему символу
+            newBackCounter--;
+        }
+
+        //Если кол-во обратных слэшей - нечетное, значит на позиции конца строковой константы была экранированная кавычка
+        if (backSlashCounter % 2 != 0)
+        {
+            //Ищем новый конец строковой константы
+            endStrConstIndex = getSubstrPositionOrDefaultValue(strToCheck, "\"", endStrConstIndex + 1);
+        }
+        //Иначе значит, что знак обратного слэша был часть экранированного обратного слэша
+        else
+        {
+            break;
+        }
+    }
+    //Вернуть позиции строковой константы
+    return SubstrPos(startStrConstIndex + 1, endStrConstIndex);
 }
 
 int getSubstrPositionOrDefaultValue(const string& strToCheck, const string& substrToFind, int startSearching)
