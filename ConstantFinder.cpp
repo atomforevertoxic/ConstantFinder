@@ -21,9 +21,21 @@ list<string> getTextFromFile(const string pathAndName, ErrorInfo& error)
 
     string line;
     bool wasStrErased = false;
+    int lineCounter = 0;
     //Пока удается получить строку
     while (getline(file, line))
     {
+        lineCounter++;
+
+        //Если превышен лимит строк
+        if (lineCounter > 300)
+        {
+            //Очистить список строк
+            textCode.clear();
+            //Выдать соответствующее сообщение об ошибке
+            error = ErrorInfo(-1, ErrorMessage::LINES_COUNT_IS_OUT_OF_LIMIT);
+            break;
+        }
         //Если строка еще не была обрезана
         if (!wasStrErased)
         {

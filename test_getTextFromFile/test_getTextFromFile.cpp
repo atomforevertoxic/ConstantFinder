@@ -65,6 +65,15 @@ namespace testgetTextFromFile
 			};
 			ErrorInfo expError;
 			checkFuncResult(expectedText, Text, expError, error);
+		}
+
+		TEST_METHOD(strLimitError)
+		{
+			ErrorInfo error;
+			list<string> Text = getTextFromFile("D:\\testGetTextFromFile_files\\example6.cpp", error);
+			list<string> expectedText = {};
+			ErrorInfo expError(-1, ErrorMessage::LINES_COUNT_IS_OUT_OF_LIMIT);
+			checkFuncResult(expectedText, Text, expError, error);
 
 		}
 	};
