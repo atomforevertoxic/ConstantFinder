@@ -85,18 +85,11 @@ list<string> getTextFromFile(const string pathAndName, ErrorInfo& error);
 */
 vector<ErrorInfo> isInputDataValid(const list<string>& codeText);
 
-/*! Поиск константы и путь до них (главная вычислительная функция)
-* \param[in] codeText - список строк, представляющий текст кода из файла .cpp
-* \return - список строковых констант и их расположений
-*/
-multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
-
 /*! Удаление всех комментариев из строки
 * \param[in][out] strToExecute - строка, в которой производится удаление
 * \return - логическое значение закомментированности след. строк
 */
 bool removeAllCommentsFromString(string& strToExecute);
-
 
 /*! Получение самого левого(первого) комментария в строке
 * \param[in] strToResearch - строка, в которой производится поиск
@@ -106,10 +99,17 @@ SubstrPos getLeftmostComment(string& strToResearch);
 
 /*! Определение, находится ли  стр. константа раньше комментариев
 * \param[in] strToSearch - строка, в которой производится поиск
+* \param[in] startSearching - позиция, с которой начинается поиск
 * \return - результат логического произведения событий существования строковой константы
 *           и значение первентсва значения стр. константы среди комментариев
 */
-bool isConstFindsEarlierThanComments(const string& strToSearch);
+bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearching);
+
+/*! Поиск константы и путь до них (главная вычислительная функция)
+* \param[in] codeText - список строк, представляющий текст кода из файла .cpp
+* \return - список строковых констант и их расположений
+*/
+multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
 
 /*! Получение начальной позиции подстроки или значения по-умолчанию
 * \param[in] strToCheck - строка, в которой производится поиск подстроки

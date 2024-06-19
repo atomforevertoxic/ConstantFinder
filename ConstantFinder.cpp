@@ -59,3 +59,18 @@ vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
     vector<ErrorInfo> vect;
     return vect;
 }
+
+bool removeAllCommentsFromString(string& strToExecute)
+{
+    return false;
+}
+
+SubstrPos getLeftmostComment(string& strToResearch)
+{
+    return SubstrPos();
+}
+
+bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearching)
+{
+    return false;
+}
