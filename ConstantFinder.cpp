@@ -408,3 +408,11 @@ void showAllErrors(vector<ErrorInfo> &errors)
         cout << report << endl;
     }
 }
+
+
+
+multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
+{
+    multiset<Constant> cc;
+    return cc;
+}
