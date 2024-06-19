@@ -121,5 +121,19 @@ namespace testisInputDataValid
 			vector<ErrorInfo> expectedErrors = {};
 			checkAnswerVector(expectedErrors, errors);
 		}
+
+		TEST_METHOD(multlineCommentedDefine)
+		{
+			list<string> Text = {
+				"/*start comment",
+				"#define Min 3*/",
+				"void main() {",
+				"int y = 3;",
+				"}"
+			};
+			vector<ErrorInfo> errors = isInputDataValid(Text);
+			vector<ErrorInfo> expectedErrors = {};
+			checkAnswerVector(expectedErrors, errors);
+		}
 	};
 }

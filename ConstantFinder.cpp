@@ -55,11 +55,92 @@ list<string> getTextFromFile(const string pathAndName, ErrorInfo& error)
 }
 
 
+
+
+
+
 vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
 {
-    vector<ErrorInfo> vect;
-    return vect;
+    //Инициализация массива ошибок
+    vector<ErrorInfo> errors;
+    bool isCommentedFlag = false;
+    int stringCounter = 0;
+    //Для каджой строки текста
+    for (string codeString : codeText)
+    {
+        stringCounter++;
+        //Если ранее был установлен флаг кооментированностит след. строки
+        if (isCommentedFlag)
+        {
+            int commentEnd = getSubstrPositionOrDefaultValue(codeString, "*/", 0);
+            //Если строка содержит конец многострочного комментария
+            if (commentEnd != codeString.length())
+            {
+                //Вырезать участок строки до конца комментария
+                cleanSubstrBySpaces(codeString, SubstrPos(0, commentEnd + 1));
+            }
+            //Иначе
+            else
+            {
+                //Пропустить строку
+                continue;
+            }
+        }
+        //Начало поиска устанавливается на начало строки
+        int startSearching = 0;
+        //Пока значение начала поиска меньше длины строки
+        while (startSearching < codeString.length())
+        {
+            //Удалить все комментарии из строки и распознать многострочный комментарий
+            isCommentedFlag = removeAllCommentsFromString(codeString);
+            
+            //Найти позицию ключевого слова define
+            int defineIndex = getSubstrPositionOrDefaultValue(codeString, "define ", startSearching);
+            
+            //Найти позицию ключевого слова typedef
+            int typedefIndex = getSubstrPositionOrDefaultValue(codeString, "typedef ", startSearching);
+            
+            //Найти позицию ключевого слова template
+            int templateIndex = getSubstrPositionOrDefaultValue(codeString, "template", startSearching);
+            
+            //Найти пару позиций строковой константы
+            SubstrPos strConstPos = findPairStrConstPositions(codeString, startSearching);
+            
+            //Если в строке присутствует объявление define
+            if (defineIndex != codeString.length() && isDefineReal(codeString, SubstrPos(defineIndex, (defineIndex + 6))))
+            {
+                //Сохранить соответствующую ошибку, включая номер строки, на которой она была обнаружена
+                errors.push_back(ErrorInfo(stringCounter, ErrorMessage::THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_CODE_TEXT));
+            }
+
+            //Если в строке присутствует объявление псевдонимов (typedef)
+            if (typedefIndex != codeString.length() && isTypedefReal(codeString, SubstrPos(defineIndex, (typedefIndex + 7))))
+            {
+                //Сохранить соответствующую ошибку, включая номер строки, на которой она была обнаружена
+                errors.push_back(ErrorInfo(stringCounter, ErrorMessage::IT_IS_NOT_ALLOWED_TO_DECLARE_ALIASES_USING_A_TYPEDEF));
+            }
+            
+            //Если в строке присутствует шаблон
+            if (templateIndex != codeString.length() && isTemplateReal(codeString, SubstrPos(defineIndex, (templateIndex + 8))))
+            {
+                //Сохранить соответствующую ошибку, включая номер строки, на которой она была обнаружена
+                errors.push_back(ErrorInfo(stringCounter, ErrorMessage::TEMPLATE_IS_NOT_ALLOWED_IN_CODE_TEXT));
+            }
+            //Сформировать список из всех найденных позиций
+            list<int> indexes = { defineIndex, typedefIndex, templateIndex, strConstPos.right};
+
+            //Поиск минимального значения из списка
+            int minElemIndex = *min_element(indexes.begin(), indexes.end());
+
+            //Начало поиска равно значению следующему после минимального найденного индекса
+            startSearching = minElemIndex+1;
+        }
+    }
+    //Вернуть набор найденных ошибок
+    return errors;
 }
+
+
 
 bool removeAllCommentsFromString(string& strToExecute)
 {
@@ -89,6 +170,10 @@ bool removeAllCommentsFromString(string& strToExecute)
     //Вернуть флаг комментированности следующих строк
     return false;
 }
+
+
+
+
 
 SubstrPos getLeftmostComment(string& strToResearch)
 {
@@ -137,6 +222,10 @@ SubstrPos getLeftmostComment(string& strToResearch)
     return leftmostCommaPos;
 }
 
+
+
+
+
 void cleanSubstrBySpaces(string& strToClean, SubstrPos pos)
 {
     //Заменить на пробел все символы в строке от начальной до конечной позиций подстроки
@@ -145,6 +234,9 @@ void cleanSubstrBySpaces(string& strToClean, SubstrPos pos)
         strToClean[i] = ' ';
     }
 }
+
+
+
 
 bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearching)
 {
@@ -166,6 +258,24 @@ bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearchi
     //Вернуть результат логической операции: строковая константа была найдена в строке и позиция ее начала - минимальная из всех найденных
     return minElem == strConstIndex && minElem != strToSearch.length();
 }
+
+
+
+
+int getSubstrPositionOrDefaultValue(const string& strToCheck, const string& substrToFind, int startSearching)
+{
+    //Найти позицию вхождения подстроки в строку
+    int posOfSubstr = strToCheck.find(substrToFind, startSearching);
+
+    //Если позиция недействительна, то присвоить ей значение длины строки, иначе оставить 
+    posOfSubstr = posOfSubstr == -1 ? strToCheck.length() : posOfSubstr;
+
+    //Вернуть вычисленную позицию
+    return posOfSubstr;
+}
+
+
+
 
 SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching)
 {
@@ -210,15 +320,60 @@ SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching
     return SubstrPos(startStrConstIndex + 1, endStrConstIndex);
 }
 
-int getSubstrPositionOrDefaultValue(const string& strToCheck, const string& substrToFind, int startSearching)
+
+
+bool isDefineReal(string codeString, SubstrPos pos)
 {
-    //Найти позицию вхождения подстроки в строку
-    int posOfSubstr = strToCheck.find(substrToFind, startSearching);
-
-    //Если позиция недействительна, то присвоить ей значение длины строки, иначе оставить 
-    posOfSubstr = posOfSubstr == -1 ? strToCheck.length() : posOfSubstr;
-
-    //Вернуть вычисленную позицию
-    return posOfSubstr;
+    int substrStartIndex = pos.left;
+    //Начиная с левой границы подстроки "двигаемся" назад до начала строки
+    for (; substrStartIndex >= 0; substrStartIndex--)
+    {
+        //Если был найден символ #
+        if (codeString[substrStartIndex] == '#')
+        {
+            //Вернуть результат функции, проверяющей подстроку на принадлежность строковой константе
+            return !isSubstrInStrConst(pos, codeString);
+        }
+    }
+    return false;
 }
 
+
+
+bool isTypedefReal(string codeString, SubstrPos pos)
+{
+    //Вернуть результат логической операции, проверяющей, что подстрока "typedef" не является частью другого слова и не находится внутри строковой константы
+    return ((pos.left == 0 || !isalpha(codeString[pos.left - 1])) && !isSubstrInStrConst(pos, codeString));
+}
+
+
+
+bool isTemplateReal(string codeString, SubstrPos pos)
+{
+    //Вернуть результат логической операции, проверяющей, что подстрока "template" не является частью другого слова и не находится внутри строковой константы
+    return ((pos.left == 0 || !isalpha(codeString[pos.left - 1])) && !isSubstrInStrConst(pos, codeString) && (pos.right == codeString.length() - 1 || codeString[pos.right] == ' ' || codeString[pos.right] == '\t' || codeString[pos.right] == '<'));
+}
+
+
+
+bool isSubstrInStrConst(SubstrPos& posToCheck, string& strToCheck)
+{
+    //Инициализация значения начала поиска
+    int startSearching = 0;
+
+    //Пока значение начала поиска не превышает длину строку
+    while (startSearching <= strToCheck.length())
+    {
+        //Найти пару позиций строковой константы
+        SubstrPos strConstPos = findPairStrConstPositions(strToCheck, startSearching);
+
+        //Если позиции проверяемой подстроки находятся внутри строковой константы
+        if (strConstPos.left<posToCheck.left && strConstPos.right>posToCheck.right)
+        {
+            return true;
+        }
+        //Начало поиска равно позиции следующей после конечной границу прошлой найденной строковой константы
+        startSearching = strConstPos.right + 1;
+    }
+    return false;
+}

@@ -79,11 +79,15 @@ public:
 */
 list<string> getTextFromFile(const string pathAndName, ErrorInfo& error);
 
+
+
 /*! Валидация входные данные
 * \param[in] codeText - список строк, представляющий текст кода из файла .cpp
 * \return - вектор всех найденных ошибок
 */
 vector<ErrorInfo> isInputDataValid(const list<string>& codeText);
+
+
 
 /*! Удаление всех комментариев из строки
 * \param[in][out] strToExecute - строка, в которой производится удаление
@@ -91,11 +95,15 @@ vector<ErrorInfo> isInputDataValid(const list<string>& codeText);
 */
 bool removeAllCommentsFromString(string& strToExecute);
 
+
+
 /*! Получение самого левого(первого) комментария в строке
 * \param[in] strToResearch - строка, в которой производится поиск
 * \return - позиции самого левого(первого) комментария
 */
 SubstrPos getLeftmostComment(string& strToResearch);
+
+
 
 /*! Определение, находится ли  стр. константа раньше комментариев
 * \param[in] strToSearch - строка, в которой производится поиск
@@ -105,12 +113,16 @@ SubstrPos getLeftmostComment(string& strToResearch);
 */
 bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearching);
 
+
+
 /*! Определение позиций строковой константы
 * \param[in] strToCheck - строка, в которой определяются позиции строковой константы
 * \param[in] startSearching - позиция, с которой начинается поиск
 * \return - начальная и конечные позиции строковой константы
 */
 SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching);
+
+
 
 /*! Получение начальной позиции подстроки или значения по-умолчанию
 * \param[in] strToCheck - строка, в которой производится поиск подстроки
@@ -120,11 +132,51 @@ SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching
 */
 int getSubstrPositionOrDefaultValue(const string& strToCheck, const string& substrToFind, int startSearching);
 
+
+
+/*! Функция, определяющая, действительно ли была объявлена директива define
+* \param[in] codeString - строка, в которой предположительно объявлена директива define
+* \param[in] pos - позиции подстроки define
+* \return - логический результат поиска объявления директивы define
+*/
+bool isDefineReal(string codeString, SubstrPos pos);
+
+
+
+/*! Функция, определяющая, действительно ли было объявлено ключевое слово typedef
+* \param[in] codeString - строка, в которой предположительно объявлено ключевое слово typedef
+* \param[in] pos - позиции подстроки typedef
+* \return - логический результат поиска объявления ключевого слова typedef
+*/
+bool isTypedefReal(string codeString, SubstrPos pos);
+
+
+
+/*! Функция, определяющая, действительно ли был объявлен шаблон templpate
+* \param[in] codeString - строка, в которой предположительно объявлен шаблон templpate
+* \param[in] pos - позиции подстроки templpate
+* \return - логический результат поиска объявления шаблона templpate
+*/
+bool isTemplateReal(string codeString, SubstrPos pos);
+
+
+
+/*! Функция определяющая, находится лии подстрока внутри строковой константы
+* \param[in] pos - позиции подстроки, которая может находится в строковой константе
+* \param[in] strToCheck - строка, в которой происходит проверка
+* \return - логическое результат наличия подстроки в строковой константе
+*/
+bool isSubstrInStrConst(SubstrPos& pos, string& strToCheck);
+
+
+
 /*! Поиск константы и путь до них (главная вычислительная функция)
 * \param[in] codeText - список строк, представляющий текст кода из файла .cpp
 * \return - список строковых констант и их расположений
 */
 multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
+
+
 
 /*! Затирание подстроки пробелами
 * \param[in][out] strToExecute - строка, в которой производится затирание
@@ -132,11 +184,15 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
 */
 void cleanSubstrBySpaces(string& strToClean, SubstrPos pos);
 
+
+
 /*! Поиск всех ключевых объектов в строке
 * \param[in] str - строка, в которой производится поиск
 * \return - список позиций подстрок всех ключевых объектов
 */
 list<SubstrPos>getAllKeyObjectsIndexes(const string& str);
+
+
 
 /*! Поиск позиций имени пространства имен/объединения/класса/структуры
 * \param[in] strToCheck - строка, в которой определяются позиции имени объявления
@@ -145,17 +201,23 @@ list<SubstrPos>getAllKeyObjectsIndexes(const string& str);
 */
 SubstrPos getDeclarNamePosition(const string& strToCheck, const string& keyWord);
 
+
+
 /*! Определение позиций имени функции
 * \param[in] strToCheck - строка, в которой определяются позиции имени функции
 * \return - начальная и конечная позиции имени функции
 */
 SubstrPos getFuncNamePosition(const string& strToCheck);
 
+
+
 /*! Поиск позиций всех парных круглых скобок в строке
 * \param[in] strToSearch - строка, в которой определяются позиции парных круглых скобок
 * \return - все позиции парных круглых скобок
 */
 list<SubstrPos> getAllBracketsPos(const string& strToSearch);
+
+
 
 /*! Определение позиций строковой константы
 * \param[in] strToCheck - строка, в которой определяются позиции строковой константы
