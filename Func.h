@@ -174,7 +174,7 @@ bool isTemplateReal(string codeString, SubstrPos pos);
 * \param[in] strToCheck - строка, в которой происходит проверка
 * \return - логическое результат наличия подстроки в строковой константе
 */
-bool isSubstrInStrConst(SubstrPos& pos, string& strToCheck);
+bool isSubstrInStrConst(SubstrPos pos, string& strToCheck);
 
 
 /*! Функция вывода найденных ошибок в консоль
@@ -206,7 +206,7 @@ list<SubstrPos>getAllKeyObjectsIndexes(const string& str);
 * \param[in] startSearching - позиция, с которой начинается поиск
 * \return начальная и конечная позиции имени пространства имен/класса/структуры/объединения
 */
-SubstrPos getDeclarNamePosition(const string& strToCheck, const string& keyWord, int startSearching);
+SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int startSearching);
 
 
 

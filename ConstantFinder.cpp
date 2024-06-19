@@ -356,7 +356,7 @@ bool isTemplateReal(string codeString, SubstrPos pos)
 
 
 
-bool isSubstrInStrConst(SubstrPos& posToCheck, string& strToCheck)
+bool isSubstrInStrConst(SubstrPos posToCheck, string& strToCheck)
 {
     //Инициализация значения начала поиска
     int startSearching = 0;
@@ -368,7 +368,7 @@ bool isSubstrInStrConst(SubstrPos& posToCheck, string& strToCheck)
         SubstrPos strConstPos = findPairStrConstPositions(strToCheck, startSearching);
 
         //Если позиции проверяемой подстроки находятся внутри строковой константы
-        if (strConstPos.left<posToCheck.left && strConstPos.right>posToCheck.right)
+        if (strConstPos.left<=posToCheck.left && strConstPos.right>posToCheck.right)
         {
             return true;
         }
@@ -417,7 +417,94 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
     return cc;
 }
 
-SubstrPos getDeclarNamePosition(const string& strToCheck, const string& keyWord, int startSearching)
+SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int startSearching)
 {
-    return SubstrPos();
+    //Если ключевое слово не равно "class" и "struct" и "namespace" и "union"
+    if (keyWord != "class" && keyWord != "struct" && keyWord != "union" && keyWord != "namespace")
+    {
+        //Вернуть значение по-умолчанию
+        return SubstrPos(strToCheck.length(), strToCheck.length());
+    }
+
+    //Найти индекс ключевого слова
+    int keyWordStartIndex = getSubstrPositionOrDefaultValue(strToCheck, keyWord, startSearching);
+    
+    //Если не удалось найти ключевое слово
+    if (keyWordStartIndex == strToCheck.length())
+    {
+        //Вернуть значение по-умолчанию
+        return SubstrPos(strToCheck.length(), strToCheck.length());
+    }
+
+    //Начало ключевого слова не совпадает с началом строки
+    if (keyWordStartIndex != 0)
+    {
+        //Пока символ до ключевого слова - буква
+        while (isalpha(strToCheck[keyWordStartIndex - 1]))
+        {
+            //Начало поиска - следующая позиция от начала ключевого слова
+            startSearching = keyWordStartIndex + 1;
+
+            //Найти новый индекс ключевого слова
+            keyWordStartIndex = getSubstrPositionOrDefaultValue(strToCheck, keyWord, startSearching);
+            //Если ключевое слово не было найдено
+            if (keyWordStartIndex == strToCheck.length())
+            {
+                //Вернуть значение по-умолчанию
+                return SubstrPos(strToCheck.length(), strToCheck.length());
+            }
+        }
+    }
+    startSearching = 0;
+    
+    //Определить конец ключевого слова
+    int keyWordEndIndex = keyWordStartIndex + keyWord.length();
+
+    //Пока символ после ключевого - буква
+    while (isalpha(strToCheck[keyWordEndIndex]))
+    {
+        //Начало поиска - следующая позиция от конца ключевого слова
+        startSearching = keyWordStartIndex + 1;
+
+        //Найти новый индекс ключевого слова
+        keyWordStartIndex = getSubstrPositionOrDefaultValue(strToCheck, keyWord, startSearching);
+
+        //Если ключевое слово не было найдено
+        if (keyWordStartIndex == strToCheck.length())
+        {
+            //Вернуть значение по-умолчанию
+            return SubstrPos(strToCheck.length(), strToCheck.length());
+        }
+    }
+
+    //Если ключевое слово заключено в строковую константу
+    if (isSubstrInStrConst(SubstrPos(keyWordStartIndex, keyWordEndIndex), strToCheck))
+    {
+        //Вернуть значение по-умолчанию
+        return SubstrPos(strToCheck.length(), strToCheck.length());
+    }
+
+    //Начало поиска - следующая позиция от конца ключевого слова
+    startSearching = keyWordEndIndex + 1;
+
+    //Найти позицию открывающей фигурной скобки
+    int figBracketIndex = getSubstrPositionOrDefaultValue(strToCheck, "{", startSearching) - 1;
+
+    //Найти позицию точки с запятой
+    int semicolonIndex = getSubstrPositionOrDefaultValue(strToCheck, ";", startSearching) - 1;
+
+    //Сформировать список из найденных позиций и конечной позиции строки
+    list<int> indexes = { figBracketIndex, semicolonIndex, (int)strToCheck.length() - 1 };
+
+    //Найти минимальную позицию из списка
+    int endNameIndex = *min_element(indexes.begin(), indexes.end());
+
+    //Перемещать позицию конца ключевого слова к началу имени объявления
+    for (; strToCheck[keyWordEndIndex] == ' ' || strToCheck[keyWordEndIndex] == '\t'; keyWordEndIndex++);
+
+    //Перемещать позицию конца объявления к концу имени объявления
+    for (; strToCheck[endNameIndex] == ' ' || strToCheck[endNameIndex] == '\t'; endNameIndex--);
+
+    //Вернуть позиции имени объявления
+    return SubstrPos(keyWordEndIndex, endNameIndex + 1);
 }

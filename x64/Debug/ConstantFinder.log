@@ -3,4 +3,15 @@ C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(156,52): warnin
 C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(219,57): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
 C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(268,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
 C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(271,31): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(426,64): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(426,43): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(436,64): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(436,43): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(454,72): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(454,51): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(461,25): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(476,68): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(476,47): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(484,64): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(484,43): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
   ConstantFinder.vcxproj -> C:\Users\Иван\source\repos\ConstantFinder\x64\Debug\ConstantFinder.exe
