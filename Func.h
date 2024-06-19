@@ -107,9 +107,10 @@ bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearchi
 
 /*! Определение позиций строковой константы
 * \param[in] strToCheck - строка, в которой определяются позиции строковой константы
+* \param[in] startSearching - позиция, с которой начинается поиск
 * \return - начальная и конечные позиции строковой константы
 */
-SubstrPos findPairStrConstPositions(const string& strToCheck);
+SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching);
 
 /*! Получение начальной позиции подстроки или значения по-умолчанию
 * \param[in] strToCheck - строка, в которой производится поиск подстроки

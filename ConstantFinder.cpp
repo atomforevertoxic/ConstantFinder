@@ -167,6 +167,10 @@ bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearchi
     return minElem == strConstIndex && minElem != strToSearch.length();
 }
 
+SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching)
+{
+    return SubstrPos();
+}
 
 int getSubstrPositionOrDefaultValue(const string& strToCheck, const string& substrToFind, int startSearching)
 {

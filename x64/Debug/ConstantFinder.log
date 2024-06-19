@@ -1,6 +1,6 @@
 ﻿  ConstantFinder.cpp
 C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(75,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
 C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(134,57): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(174,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(177,31): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(178,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Иван\source\repos\ConstantFinder\ConstantFinder.cpp(181,31): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
   ConstantFinder.vcxproj -> C:\Users\Иван\source\repos\ConstantFinder\x64\Debug\ConstantFinder.exe
