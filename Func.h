@@ -203,9 +203,10 @@ list<SubstrPos>getAllKeyObjectsIndexes(const string& str);
 /*! ѕоиск позиций имени пространства имен/объединени€/класса/структуры
 * \param[in] strToCheck - строка, в которой определ€ютс€ позиции имени объ€влени€
 * \param[in] keyWord - ключевое слово дл€ поиска
+* \param[in] startSearching - позици€, с которой начинаетс€ поиск
 * \return начальна€ и конечна€ позиции имени пространства имен/класса/структуры/объединени€
 */
-SubstrPos getDeclarNamePosition(const string& strToCheck, const string& keyWord);
+SubstrPos getDeclarNamePosition(const string& strToCheck, const string& keyWord, int startSearching);
 
 
 

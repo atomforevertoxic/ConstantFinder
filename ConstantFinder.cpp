@@ -416,3 +416,8 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
     multiset<Constant> cc;
     return cc;
 }
+
+SubstrPos getDeclarNamePosition(const string& strToCheck, const string& keyWord, int startSearching)
+{
+    return SubstrPos();
+}

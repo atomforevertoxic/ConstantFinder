@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_findPairStrConstPositi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_findAllConstantsAndTheirLocation", "..\test_findAllConstantsAndTheirLocation\test_findAllConstantsAndTheirLocation.vcxproj", "{6F7FB581-A346-4327-8DBD-7E9A7AC33EC0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_getDeclarNamePosition", "..\test_getDeclarNamePosition\test_getDeclarNamePosition.vcxproj", "{1EA83360-BF37-495B-A477-282B6A364022}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,14 @@ Global
 		{6F7FB581-A346-4327-8DBD-7E9A7AC33EC0}.Release|x64.Build.0 = Release|x64
 		{6F7FB581-A346-4327-8DBD-7E9A7AC33EC0}.Release|x86.ActiveCfg = Release|Win32
 		{6F7FB581-A346-4327-8DBD-7E9A7AC33EC0}.Release|x86.Build.0 = Release|Win32
+		{1EA83360-BF37-495B-A477-282B6A364022}.Debug|x64.ActiveCfg = Debug|x64
+		{1EA83360-BF37-495B-A477-282B6A364022}.Debug|x64.Build.0 = Debug|x64
+		{1EA83360-BF37-495B-A477-282B6A364022}.Debug|x86.ActiveCfg = Debug|Win32
+		{1EA83360-BF37-495B-A477-282B6A364022}.Debug|x86.Build.0 = Debug|Win32
+		{1EA83360-BF37-495B-A477-282B6A364022}.Release|x64.ActiveCfg = Release|x64
+		{1EA83360-BF37-495B-A477-282B6A364022}.Release|x64.Build.0 = Release|x64
+		{1EA83360-BF37-495B-A477-282B6A364022}.Release|x86.ActiveCfg = Release|Win32
+		{1EA83360-BF37-495B-A477-282B6A364022}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
