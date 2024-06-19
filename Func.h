@@ -51,8 +51,8 @@ enum ErrorMessage
 {
     INVALID_FILENAME_OR_FILEPATH_OR_FILE_DOES_NOT_EXIST,
     LINES_COUNT_IS_OUT_OF_LIMIT,
-    TEMPLATE_IS_NOT_ALLOWED_IN_CODE_TEXT,
-    THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_CODE_TEXT,
+    TEMPLATE_IS_NOT_ALLOWED_IN_TEXT_CODE,
+    THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_TEXT_CODE,
     IT_IS_NOT_ALLOWED_TO_DECLARE_ALIASES_USING_A_TYPEDEF
 };
 
@@ -115,6 +115,14 @@ bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearchi
 
 
 
+/*! Затирание подстроки пробелами
+* \param[in][out] strToExecute - строка, в которой производится затирание
+* \param[in] pos - позиции затираемой подстроки
+*/
+void cleanSubstrBySpaces(string& strToClean, SubstrPos pos);
+
+
+
 /*! Определение позиций строковой константы
 * \param[in] strToCheck - строка, в которой определяются позиции строковой константы
 * \param[in] startSearching - позиция, с которой начинается поиск
@@ -169,20 +177,18 @@ bool isTemplateReal(string codeString, SubstrPos pos);
 bool isSubstrInStrConst(SubstrPos& pos, string& strToCheck);
 
 
+/*! Функция вывода найденных ошибок в консоль
+* \param[in] errors - вектор всех найденных ошибок
+*/
+void showAllErrors(vector<ErrorInfo> &errors);
+
+
 
 /*! Поиск константы и путь до них (главная вычислительная функция)
 * \param[in] codeText - список строк, представляющий текст кода из файла .cpp
 * \return - список строковых констант и их расположений
 */
 multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
-
-
-
-/*! Затирание подстроки пробелами
-* \param[in][out] strToExecute - строка, в которой производится затирание
-* \param[in] pos - позиции затираемой подстроки
-*/
-void cleanSubstrBySpaces(string& strToClean, SubstrPos pos);
 
 
 

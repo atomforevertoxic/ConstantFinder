@@ -110,7 +110,7 @@ vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
             if (defineIndex != codeString.length() && isDefineReal(codeString, SubstrPos(defineIndex, (defineIndex + 6))))
             {
                 //Сохранить соответствующую ошибку, включая номер строки, на которой она была обнаружена
-                errors.push_back(ErrorInfo(stringCounter, ErrorMessage::THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_CODE_TEXT));
+                errors.push_back(ErrorInfo(stringCounter, ErrorMessage::THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_TEXT_CODE));
             }
 
             //Если в строке присутствует объявление псевдонимов (typedef)
@@ -124,7 +124,7 @@ vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
             if (templateIndex != codeString.length() && isTemplateReal(codeString, SubstrPos(defineIndex, (templateIndex + 8))))
             {
                 //Сохранить соответствующую ошибку, включая номер строки, на которой она была обнаружена
-                errors.push_back(ErrorInfo(stringCounter, ErrorMessage::TEMPLATE_IS_NOT_ALLOWED_IN_CODE_TEXT));
+                errors.push_back(ErrorInfo(stringCounter, ErrorMessage::TEMPLATE_IS_NOT_ALLOWED_IN_TEXT_CODE));
             }
             //Сформировать список из всех найденных позиций
             list<int> indexes = { defineIndex, typedefIndex, templateIndex, strConstPos.right};
@@ -376,4 +376,35 @@ bool isSubstrInStrConst(SubstrPos& posToCheck, string& strToCheck)
         startSearching = strConstPos.right + 1;
     }
     return false;
+}
+
+void showAllErrors(vector<ErrorInfo> &errors)
+{
+    //Для каждой ошибки из вектора
+    for (ErrorInfo error : errors)
+    {
+        //Начальный шаблон сообщения об ошибке
+        string report = "Line - |" + to_string(error.Line) + "|: ";
+        //В зависимости от типа ошибки в изначальный шаблон сообщения об ошибке добавляется разное пояснение
+        switch (error.Message)
+        {
+        case INVALID_FILENAME_OR_FILEPATH_OR_FILE_DOES_NOT_EXIST:
+            report += "INVALID FILENAME OR FILEPATH OR FILE DOES NOT EXIST";
+            break;
+        case LINES_COUNT_IS_OUT_OF_LIMIT:
+            report += "LINES COUNT IS OUT OF LIMIT";
+            break;
+        case TEMPLATE_IS_NOT_ALLOWED_IN_TEXT_CODE:
+            report += "TEMPLATE IS NOT ALLOWED IN TEXT CODE";
+            break;
+        case THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_TEXT_CODE:
+            report += "THE DEFINE DIRECTIVE IS NOT ALLOWED IN TEXT CODE";
+            break;
+        case IT_IS_NOT_ALLOWED_TO_DECLARE_ALIASES_USING_A_TYPEDEF:
+            report += "IT IS NOT ALLOWED TO DECLARE ALIASES USING A TYPEDEF";
+            break;
+        }
+        //Вывод сформированного сообщения об ошибке
+        cout << report << endl;
+    }
 }
