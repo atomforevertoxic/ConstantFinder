@@ -105,11 +105,11 @@ SubstrPos getLeftmostComment(string& strToResearch);
 */
 bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearching);
 
-/*! Поиск константы и путь до них (главная вычислительная функция)
-* \param[in] codeText - список строк, представляющий текст кода из файла .cpp
-* \return - список строковых констант и их расположений
+/*! Определение позиций строковой константы
+* \param[in] strToCheck - строка, в которой определяются позиции строковой константы
+* \return - начальная и конечные позиции строковой константы
 */
-multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
+SubstrPos findPairStrConstPositions(const string& strToCheck);
 
 /*! Получение начальной позиции подстроки или значения по-умолчанию
 * \param[in] strToCheck - строка, в которой производится поиск подстроки
@@ -118,6 +118,12 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
 * \return - индекс начала подстроки или значение по-умолчанию, если подстрока не найдена в строке
 */
 int getSubstrPositionOrDefaultValue(const string& strToCheck, const string& substrToFind, int startSearching);
+
+/*! Поиск константы и путь до них (главная вычислительная функция)
+* \param[in] codeText - список строк, представляющий текст кода из файла .cpp
+* \return - список строковых констант и их расположений
+*/
+multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
 
 /*! Затирание подстроки пробелами
 * \param[in][out] strToExecute - строка, в которой производится затирание
