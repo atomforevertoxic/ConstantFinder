@@ -516,6 +516,53 @@ SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching)
 
 list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching)
 {
-    list<SubstrPos> pos;
-    return pos;
+    //Инициализация списка позиций пар круглых скобок
+    list<SubstrPos> allBracketsPosList;
+
+    //Инициализация стэка позиций открывающих круглых скобок
+    stack<int> openBracketsPos;
+
+    //Пока строка содержит открывающую скобку
+    while (strToSearch.find("(", startSearching) != string::npos)
+    {
+        //Найти индекс открывающей круглой скобки
+        int openBracketsIndex = strToSearch.find("(", startSearching);
+
+        //Сохранить найденную позицию в стэк
+        openBracketsPos.push(openBracketsIndex);
+
+        //Установить начало поиска равное позиции следующей после индекса открывающей скобки
+        startSearching = openBracketsIndex + 1;
+
+        //Пока индекс новой открывающей скобки меньше индекса закрывающей скобки
+        while (strToSearch.find("(", startSearching) != string::npos && strToSearch.find("(", startSearching) < strToSearch.find(")", startSearching))
+        {
+            //Найти позицию новой открывающей скобки
+            openBracketsIndex = strToSearch.find("(", startSearching);
+
+            //Сохранить найденную позицию в стэк
+            openBracketsPos.push(openBracketsIndex);
+
+            //Установить начало поиска равное позиции следующей после индекса открывающей скобки
+            startSearching = openBracketsIndex + 1;
+        }
+
+        //Пока индекс новой закрывающей скобки меньше индекса открывающей скобки
+        while (strToSearch.find(")", startSearching) != string::npos && (strToSearch.find("(", startSearching) > strToSearch.find(")", startSearching)))
+        {
+            //Найти позицию новой закрывающей скобки
+            int closedBracketIndex = strToSearch.find(")", startSearching);
+
+            //Сохранить позиции пары открывающей и закрывающей скобок
+            allBracketsPosList.push_back(SubstrPos(openBracketsPos.top(), closedBracketIndex));
+
+            //Удалить последнюю позицию открывающей скобки из стэка
+            openBracketsPos.pop();
+
+            //Установить начало поиска равное позиции следующей после индекса закрывающей скобки
+            startSearching = closedBracketIndex + 1;
+        }
+    }
+    //Вернуть список позиций всех пар правильно расставленных круглых скобок
+    return allBracketsPosList;
 }
