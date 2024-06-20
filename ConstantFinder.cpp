@@ -2,6 +2,61 @@
 
 int main(int argc, char* argv[])
 {
+    //Инициализировать одиную ошибку для функции считывания текста из файла
+    ErrorInfo inputError = ErrorInfo();
+
+    //Получить список строк из файла
+    list<string> codeText = getTextFromFile(argv[1], inputError);
+
+    //Инициализировать вектор ошибок
+    vector<ErrorInfo> ErrorVector;
+
+    //Инициализировать набор объектов типа Constant
+    multiset<Constant> constantAndTheirLocations;
+
+    //Получить имя(путь и имя) входного файла
+    string responseFileName = argv[1];
+
+    //Сформировать имя выходного файла
+    responseFileName.replace((responseFileName.length() - 4), 4, "_response.txt");
+
+    //Если одиночная ошибка содержит значение не по-умолчанию
+    if (inputError.Line != -333)
+    {
+        //Вывести соответствующую ошибку в консоль
+        ErrorVector = { inputError };
+        showAllErrors(ErrorVector);
+
+        //Создать пустой файл
+        makeResponseFile(constantAndTheirLocations, responseFileName);
+        
+        //Вернуть код неккоректного завершения программы
+        return -1;
+    }
+
+    //Протестировать входные данные на корректность
+    ErrorVector = isInputDataValid(codeText);
+
+    //Если в ходе проверки были выявлены ошибки
+    if (!ErrorVector.empty())
+    {
+        //Вывести ошибки в консоль
+        showAllErrors(ErrorVector);
+
+        //Создать пустой файл
+        makeResponseFile(constantAndTheirLocations, responseFileName);
+        
+        //Вернуть код некорректного завершения программы
+        return -2;
+    }
+
+    //Найти все константы из текста и их расположение
+    constantAndTheirLocations = findAllConstantsAndTheirLocation(codeText);
+
+    //Сформировать выходной файл на основе полученного результата главной вычислительной функции
+    makeResponseFile(constantAndTheirLocations, responseFileName);
+    
+    //Вернуть код корректного завершения программы
     return 0;
 }
 
