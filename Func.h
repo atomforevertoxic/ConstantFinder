@@ -221,9 +221,10 @@ SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching);
 
 /*! Поиск позиций всех парных круглых скобок в строке
 * \param[in] strToSearch - строка, в которой определяются позиции парных круглых скобок
+* \param[in] startSearching - позиция, с которой начинается поиск
 * \return - все позиции парных круглых скобок
 */
-list<SubstrPos> getAllBracketsPos(const string& strToSearch);
+list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching);
 
 
 

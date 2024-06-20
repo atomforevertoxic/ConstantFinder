@@ -513,3 +513,9 @@ SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching)
 {
     return SubstrPos();
 }
+
+list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching)
+{
+    list<SubstrPos> pos;
+    return pos;
+}
