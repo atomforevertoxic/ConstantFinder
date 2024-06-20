@@ -212,9 +212,10 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
 
 /*! Определение позиций имени функции
 * \param[in] strToCheck - строка, в которой определяются позиции имени функции
+* \param[in] startSearching - позиция, с которой начинается поиск
 * \return - начальная и конечная позиции имени функции
 */
-SubstrPos getFuncNamePosition(const string& strToCheck);
+SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching);
 
 
 

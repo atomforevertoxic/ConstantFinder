@@ -508,3 +508,8 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
     //Вернуть позиции имени объявления
     return SubstrPos(keyWordEndIndex, endNameIndex + 1);
 }
+
+SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching)
+{
+    return SubstrPos();
+}
