@@ -414,9 +414,106 @@ void showAllErrors(vector<ErrorInfo> &errors)
 multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
 {
     multiset<Constant> allConstantAndTheirLocation;
+    int startSearching = 0;
+    bool isCommentedFlag = false;
+
+    int curlOpenBracketsCounter = 0;
+    stack<string> globalConstantPathStack;
+    string constantFunction = "";
+
+    int stringCounter = 0;
+
+    for (string codeString : codeText)
+    {
+        stringCounter++;
+        int startSearching = 0;
+        while (startSearching <= codeString.length())
+        {
+            list<SubstrPos> allKeyObjectPositions = getAllKeyObjectsIndexes(codeString, startSearching);
+            SubstrPos minPos;
+            int minSubstrIndex = minSubstrPosFromList(allKeyObjectPositions, minPos);
+            startSearching = minPos.right + 1;
+            if (minPos.left < codeString.length())
+            {
+                switch (minSubstrIndex)
+                {
+                case 0:
+                    curlOpenBracketsCounter++;
+                    break;
+                case 1:
+                    curlOpenBracketsCounter--;
+                    if (curlOpenBracketsCounter < (globalConstantPathStack.size() + 1) && constantFunction != "")
+                    {
+                        constantFunction = "";
+                    }
+                    else if (curlOpenBracketsCounter < (globalConstantPathStack.size() + 1))
+                    {
+                        globalConstantPathStack.pop();
+                    }
+                    break;
+                case 2:
+                    globalConstantPathStack.push(codeString.substr(minPos.left, (minPos.right - minPos.left)));
+                    break;
+                case 3:
+                    constantFunction = codeString.substr(minPos.left, (minPos.right - minPos.left));
+                    break;
+                case 4:
+                {
+                    string fullConstantPath = "";
+                    if (!constantFunction.empty())
+                    {
+                        fullConstantPath = " - " + constantFunction + ":";
+                    }
+                    else
+                    {
+                        fullConstantPath = ":";
+                    }
+
+                    if (globalConstantPathStack.empty())
+                    {
+                        fullConstantPath = "global" + fullConstantPath;
+                    }
+                    else
+                    {
+                        stack<string> stackToMakePath = globalConstantPathStack;
+                        while (!stackToMakePath.empty())
+                        {
+                            fullConstantPath = " - " + stackToMakePath.top() + fullConstantPath;
+                            stackToMakePath.pop();
+                        }
+                        fullConstantPath.erase(0, 3);
+                    }
+                    string foundConstString = codeString.substr(minPos.left, (minPos.right - minPos.left));
+                    Constant fullConstantObject(fullConstantPath, stringCounter, foundConstString);
+                    allConstantAndTheirLocation.insert(fullConstantObject);
+                }
+                break;
+                }
+            }
+        }
+    }
     return allConstantAndTheirLocation;
 }
 
+
+
+list<SubstrPos>getAllKeyObjectsIndexes(string& str, int startSearching)
+{
+    SubstrPos classDeclarPos = getDeclarNamePosition(str, "class", startSearching); 
+    SubstrPos structDeclarPos = getDeclarNamePosition(str, "struct", startSearching); 
+    SubstrPos unionDeclarPos = getDeclarNamePosition(str, "union", startSearching);  
+    SubstrPos namespaceDeclarPos = getDeclarNamePosition(str, "namespace", startSearching); 
+    SubstrPos minGlobalPathPartPos;
+    minSubstrPosFromList({ classDeclarPos, structDeclarPos, unionDeclarPos, namespaceDeclarPos }, minGlobalPathPartPos);
+    SubstrPos funcNamePos = getFuncNamePosition(str, startSearching);
+    SubstrPos constMarkPos = findPairStrConstPositions(str, startSearching);
+    int openFigIndex = getSubstrPositionOrDefaultValue(str, "{", startSearching);
+    SubstrPos openFigBracket = SubstrPos(openFigIndex, openFigIndex + 1);
+    int closeFigIndex = getSubstrPositionOrDefaultValue(str, "}", startSearching);
+    SubstrPos closeFigBracket = SubstrPos(closeFigIndex, closeFigIndex + 1);
+    list<SubstrPos> allPositions = { openFigBracket, closeFigBracket, minGlobalPathPartPos, funcNamePos, constMarkPos };
+    return allPositions;
+}
 
 
 SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int startSearching)
@@ -524,6 +621,27 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
     //Вернуть позиции имени объявления
     return SubstrPos(keyWordEndIndex, endNameIndex + 1);
 }
+
+
+
+int minSubstrPosFromList(list<SubstrPos> allPositions, SubstrPos& minPos)
+{
+    int index = 0;
+    int minIndex = 0;
+    minPos = *allPositions.begin();
+    for (SubstrPos pos : allPositions)
+    {
+        if (pos.left < minPos.left)
+        {
+            minPos = pos;
+            minIndex = index;
+        }
+        index++;
+    }
+    return minIndex;
+}
+
+
 
 SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching)
 {

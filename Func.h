@@ -193,6 +193,15 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
 
 
 
+/*! Поиск всех ключевых объектов в строке
+* \param[in] str - строка, в которой производится поиск
+* \param[in] startSearching - позиция, с которой начинается поиск
+* \return - список позиций подстрок всех ключевых объектов
+*/
+list<SubstrPos>getAllKeyObjectsIndexes(string& str, int startSearching);
+
+
+
 /*! Поиск позиций имени пространства имен/объединения/класса/структуры
 * \param[in] strToCheck - строка, в которой определяются позиции имени объявления
 * \param[in] keyWord - ключевое слово для поиска
@@ -200,6 +209,15 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
 * \return начальная и конечная позиции имени пространства имен/класса/структуры/объединения
 */
 SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int startSearching);
+
+
+
+/*! Поиск минимального из всех позиций ключевых объектов
+* \param[in] allPositions - список позиций всех ключевых объектов
+* \param[in][out] minPos - минимальная пара позиций подстроки из списка
+* \return - порядковый номер пары минимальных позиций подстроки в списке
+*/
+int minSubstrPosFromList(list<SubstrPos> allPositions, SubstrPos& minPos);
 
 
 
