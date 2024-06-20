@@ -1012,6 +1012,9 @@ void makeResponseFile(multiset<Constant> constants, string responseFileName)
                     //Записать информацию о дубликате в специальной форме
                     string duplResponse = duplicate.constString + " - " + to_string(constants.count(duplicate));
                     MyFile << duplResponse << endl;
+
+                    //Добавить объект в набор использованных
+                    lastUsedConstants.insert(duplicate);
                 }
             }
         }
