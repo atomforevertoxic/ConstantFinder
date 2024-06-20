@@ -193,14 +193,6 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText);
 
 
 
-/*! Поиск всех ключевых объектов в строке
-* \param[in] str - строка, в которой производится поиск
-* \return - список позиций подстрок всех ключевых объектов
-*/
-list<SubstrPos>getAllKeyObjectsIndexes(const string& str);
-
-
-
 /*! Поиск позиций имени пространства имен/объединения/класса/структуры
 * \param[in] strToCheck - строка, в которой определяются позиции имени объявления
 * \param[in] keyWord - ключевое слово для поиска
@@ -248,7 +240,8 @@ bool isSemicolonInStrConst(list<SubstrPos> strConstIndexes, int semicolonIndex);
 
 /*! Определение позиций строковой константы
 * \param[in] strToCheck - строка, в которой определяются позиции строковой константы
+* \param[in] startSearching - позиция, с которой начинается поиск
 * \return - начальная и конечные позиции строковой константы
 */
-SubstrPos findPairStrConstPositions(const string& strToCheck);
+SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching);
 

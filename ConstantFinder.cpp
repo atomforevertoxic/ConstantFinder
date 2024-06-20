@@ -413,9 +413,11 @@ void showAllErrors(vector<ErrorInfo> &errors)
 
 multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
 {
-    multiset<Constant> cc;
-    return cc;
+    multiset<Constant> allConstantAndTheirLocation;
+    return allConstantAndTheirLocation;
 }
+
+
 
 SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int startSearching)
 {
@@ -490,20 +492,34 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
     //Найти позицию открывающей фигурной скобки
     int figBracketIndex = getSubstrPositionOrDefaultValue(strToCheck, "{", startSearching) - 1;
 
-    //Найти позицию точки с запятой
-    int semicolonIndex = getSubstrPositionOrDefaultValue(strToCheck, ";", startSearching) - 1;
-
-    //Сформировать список из найденных позиций и конечной позиции строки
-    list<int> indexes = { figBracketIndex, semicolonIndex, (int)strToCheck.length() - 1 };
-
-    //Найти минимальную позицию из списка
-    int endNameIndex = *min_element(indexes.begin(), indexes.end());
+    //Минимальное значение будем считать за конец имени объявления
+    int endNameIndex = min(figBracketIndex, (int)strToCheck.length()-1);
 
     //Перемещать позицию конца ключевого слова к началу имени объявления
     for (; strToCheck[keyWordEndIndex] == ' ' || strToCheck[keyWordEndIndex] == '\t'; keyWordEndIndex++);
 
     //Перемещать позицию конца объявления к концу имени объявления
     for (; strToCheck[endNameIndex] == ' ' || strToCheck[endNameIndex] == '\t'; endNameIndex--);
+
+    //Найти позицию точки с запятой
+    int semicolonIndex = getSubstrPositionOrDefaultValue(strToCheck, ";", startSearching);
+
+    //Если точка с запятой была найдена в строке
+    if (semicolonIndex != strToCheck.length())
+    {
+        //Получить подстроку в границах между имени объявления и точки с запятой
+        string afterDeclarSubstr = strToCheck.substr(endNameIndex + 1, semicolonIndex - endNameIndex-1);
+
+        //Регулярное выржание, которое определет, относится ли точка с запятой к объявлению
+        regex r(R"(^\s*$)");
+
+        //Если регулярное выражение выполняется
+        if (regex_match(afterDeclarSubstr, r))
+        {
+            //Вернуть значение позиций по-умолчанию
+            return SubstrPos(strToCheck.length(), strToCheck.length());
+        }
+    }
 
     //Вернуть позиции имени объявления
     return SubstrPos(keyWordEndIndex, endNameIndex + 1);

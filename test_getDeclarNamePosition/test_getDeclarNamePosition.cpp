@@ -126,5 +126,14 @@ namespace testgetDeclarNamePosition
 			Assert::AreEqual(exp.left, act.left);
 			Assert::AreEqual(exp.right, act.right);
 		}
+
+		TEST_METHOD(usingStandartNamespace)
+		{
+			string str = "using namespace std;";
+			SubstrPos act = getDeclarNamePosition(str, "namespace", 0);
+			SubstrPos exp(20, 20);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
+		}
 	};
 }
