@@ -1,8 +1,8 @@
 ﻿#include "Func.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-    std::cout << "Hello World!\n";
+    return 0;
 }
 
 list<string> getTextFromFile(const string pathAndName, ErrorInfo& error)
@@ -435,7 +435,7 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
         int startSearching = 0;
 
         //Пока начало поиска не больше длины строки
-        while (startSearching <= codeString.length())
+        while (startSearching <= codeString.length() && codeString.length()!=0)
         {
             //Сформировать список из пар позиций всех ключевых объектов
             list<SubstrPos> allKeyObjectPositions = getAllKeyObjectsIndexes(codeString, startSearching);
@@ -773,6 +773,8 @@ SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching)
     return SubstrPos(strToCheck.length(), strToCheck.length());
 }
 
+
+
 list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching)
 {
     //Инициализация списка позиций пар круглых скобок
@@ -825,6 +827,7 @@ list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching)
     //Вернуть список позиций всех пар правильно расставленных круглых скобок
     return allBracketsPosList;
 }
+
 
 
 bool isSubstrContainsFuncArgs(string substr)
@@ -888,4 +891,78 @@ bool isSemicolonInStrConst(list<SubstrPos> strConstIndexes, int semicolonIndex)
         }
     }
     return false;
+}
+
+
+void makeResponseFile(multiset<Constant> constants, string responseFileName)
+{
+    //Открытие поток записи в файл
+    ofstream MyFile(responseFileName);
+
+    //Если набор объектов Constant пуст
+    if (constants.empty())
+    {
+        //Вывести соответствующее сообщение
+        MyFile << "no solution" << endl;
+    }
+    //Иначе
+    else
+    {
+        bool isMultisetContainsDupl = false;
+        string lastUsedPath = "";
+        //Для каждого объекта Constant
+        for (Constant constant : constants)
+        {
+            //Если данный путь до константы еще не был записан
+            if (lastUsedPath != constant.constantLocation)
+            {
+                //Записать это путь как заголовок для констант
+                MyFile << endl;
+                MyFile << constant.constantLocation << endl;
+
+                lastUsedPath = constant.constantLocation;
+            }
+
+            //Сформировать строку, содержащую информацию о константе
+            string response = to_string(constant.constLine) + " \"" + constant.constString + "\"";
+
+            //Записать строку в файл
+            MyFile << response << endl;
+            
+            //Если данная константа дублируется
+            if (constants.count(constant) > 1)
+            {
+                //Установить соответствующий флаг
+                isMultisetContainsDupl = true;
+            }
+        }
+
+        //Если набор содержит дублирующиеся константы
+        if (isMultisetContainsDupl)
+        {
+            //Записать в файл соответствующий заголовок
+            MyFile << endl;
+            MyFile << endl;
+            MyFile << "#duplicates:" << endl;
+
+            //Инициализировать набор уже записанных дубликатов
+            multiset<Constant> lastUsedConstants;
+
+            //Для каждого объекта Constant из набора
+            for (Constant duplicate : constants)
+            {
+                //Если константа дублируется и еще не была записана в файл
+                if (lastUsedConstants.count(duplicate) == 0 && constants.count(duplicate) > 1)
+                {
+                    //Записать информацию о дубликате в специальной форме
+                    string duplResponse = duplicate.constString + " - " + to_string(constants.count(duplicate));
+                    MyFile << duplResponse << endl;
+                }
+            }
+        }
+
+    }
+
+    //Закрыть поток записис в файл
+    MyFile.close();
 }

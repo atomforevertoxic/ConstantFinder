@@ -64,7 +64,7 @@ public:
     ErrorMessage Message;
     ErrorInfo()
     {
-        Line = -1;
+        Line = -333;
     }
     ErrorInfo(int line, ErrorMessage message)
     {
@@ -262,4 +262,12 @@ bool isSemicolonInStrConst(list<SubstrPos> strConstIndexes, int semicolonIndex);
 * \return - начальная и конечные позиции строковой константы
 */
 SubstrPos findPairStrConstPositions(const string& strToCheck, int startSearching);
+
+
+
+/*! Функция. которая формирует результат программы в виде выходного файла
+* \param[in] constants - набор найденных строковых констант вместе с их расположением
+* \param[in] responseFileName - имя выходного файла
+*/
+void makeResponseFile(multiset<Constant> constants, string responseFileName);
 
