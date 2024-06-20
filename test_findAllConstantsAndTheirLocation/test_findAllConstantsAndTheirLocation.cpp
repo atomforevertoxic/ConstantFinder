@@ -57,7 +57,7 @@ namespace testfindAllConstantsAndTheirLocation
 				"}"
 			};
 			multiset<Constant> answer = findAllConstantsAndTheirLocation(codeText);
-			multiset<Constant> expAnswer = { Constant("class Cl1:", 2, "С") };
+			multiset<Constant> expAnswer = { Constant("Cl1:", 2, "C") };
 			areMultisetsEqual(expAnswer, answer);
 		}
 
@@ -73,7 +73,7 @@ namespace testfindAllConstantsAndTheirLocation
 				"}"
 			};
 			multiset<Constant> answer = findAllConstantsAndTheirLocation(codeText);
-			multiset<Constant> expAnswer = { Constant("class Cl1 - class cl2:", 3, "CL2") };
+			multiset<Constant> expAnswer = { Constant("Cl1 - cl2:", 3, "CL2") };
 			areMultisetsEqual(expAnswer, answer);
 		}
 
@@ -86,7 +86,7 @@ namespace testfindAllConstantsAndTheirLocation
 				"}"
 			};
 			multiset<Constant> answer = findAllConstantsAndTheirLocation(codeText);
-			multiset<Constant> expAnswer = { Constant("struct s1:", 2, "S") };
+			multiset<Constant> expAnswer = { Constant("s1:", 2, "S") };
 			areMultisetsEqual(expAnswer, answer);
 		}
 
@@ -101,7 +101,7 @@ namespace testfindAllConstantsAndTheirLocation
 				"}"
 			};
 			multiset<Constant> answer = findAllConstantsAndTheirLocation(codeText);
-			multiset<Constant> expAnswer = { Constant("namespace user - global", 3, "user") };
+			multiset<Constant> expAnswer = { Constant("user:", 3, "user") };
 			areMultisetsEqual(expAnswer, answer);
 		}
 
@@ -114,7 +114,7 @@ namespace testfindAllConstantsAndTheirLocation
 				"}"
 			};
 			multiset<Constant> answer = findAllConstantsAndTheirLocation(codeText);
-			multiset<Constant> expAnswer = { Constant("union u2:", 2, "un") };
+			multiset<Constant> expAnswer = { Constant("u2:", 2, "un") };
 			areMultisetsEqual(expAnswer, answer);
 		}
 
@@ -130,7 +130,7 @@ namespace testfindAllConstantsAndTheirLocation
 				"}"
 			};
 			multiset<Constant> answer = findAllConstantsAndTheirLocation(codeText);
-			multiset<Constant> expAnswer = { Constant("class Cl1 - cl1Func:", 4, "func") };
+			multiset<Constant> expAnswer = { Constant("Cl1 - cl1Func:", 4, "func") };
 			areMultisetsEqual(expAnswer, answer);
 		}
 
@@ -156,14 +156,14 @@ namespace testfindAllConstantsAndTheirLocation
 				"}"
 			};
 			multiset<Constant> answer = findAllConstantsAndTheirLocation(codeText);
-			multiset<Constant> expAnswer = { Constant("global - main::", 3, "forA") };
+			multiset<Constant> expAnswer = { Constant("global - main:", 3, "forA") };
 			areMultisetsEqual(expAnswer, answer);
 		}
 
 		TEST_METHOD(setStrConstToDefaultFuncArg)
 		{
 			list<string> codeText = {
-				"void set(std::string s=\"Solve\")"
+				"void set(std::string s=\"Solve\");",
 				"using namespace std;",
 				"void main() {",
 				"}",
@@ -180,7 +180,7 @@ namespace testfindAllConstantsAndTheirLocation
 		TEST_METHOD(strConstPassedToArgWhenFuncIsCalled)
 		{
 			list<string> codeText = {
-				"void get(std::string s);"
+				"void get(std::string s);",
 				"using namespace std;",
 				"void main() {",
 				"\tget(\"Solve\");",
