@@ -422,7 +422,7 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
     //Если ключевое слово не равно "class" и "struct" и "namespace" и "union"
     if (keyWord != "class" && keyWord != "struct" && keyWord != "union" && keyWord != "namespace")
     {
-        //Вернуть значение по-умолчанию
+        //Вернуть значение позиций по-умолчанию
         return SubstrPos(strToCheck.length(), strToCheck.length());
     }
 
@@ -450,7 +450,7 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
             //Если ключевое слово не было найдено
             if (keyWordStartIndex == strToCheck.length())
             {
-                //Вернуть значение по-умолчанию
+                //Вернуть значение позиций по-умолчанию
                 return SubstrPos(strToCheck.length(), strToCheck.length());
             }
         }
@@ -472,7 +472,7 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
         //Если ключевое слово не было найдено
         if (keyWordStartIndex == strToCheck.length())
         {
-            //Вернуть значение по-умолчанию
+            //Вернуть значение позиций по-умолчанию
             return SubstrPos(strToCheck.length(), strToCheck.length());
         }
     }
@@ -480,7 +480,7 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
     //Если ключевое слово заключено в строковую константу
     if (isSubstrInStrConst(SubstrPos(keyWordStartIndex, keyWordEndIndex), strToCheck))
     {
-        //Вернуть значение по-умолчанию
+        //Вернуть значение позиций по-умолчанию
         return SubstrPos(strToCheck.length(), strToCheck.length());
     }
 
@@ -511,7 +511,62 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
 
 SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching)
 {
-    return SubstrPos();
+
+    //Найти список всех круглых скобок в строке
+    list<SubstrPos> bracketsPosList = getAllBracketsPos(strToCheck, startSearching);
+    bool argsFoundFlag = false;
+    SubstrPos foundArgsBracketPos;
+
+    //Для каждой пары позиций круглых скобок
+    for (list<SubstrPos>::reverse_iterator listItr = bracketsPosList.rbegin(); listItr != bracketsPosList.rend(); ++listItr)
+    {
+        SubstrPos pos(listItr->left, listItr->right);
+
+        //Получить подстроку заключенную в круглые скобки
+        string argSubstr = strToCheck.substr(pos.left, (pos.right - pos.left) + 1);
+
+        //Найти позицию точки с запятой
+        int semicolonIndex = getSubstrPositionOrDefaultValue(strToCheck, ";", pos.right);
+
+        //Получить подстроку между закрывающей фигурной скобкой и позицией точки с запятой
+        string afterArgSubstr = strToCheck.substr(pos.right, semicolonIndex - pos.right + 1);
+
+        //Регулярное выражение, которое распознает, что между закрывающей круглой скобкой и точкой с запятой находятся только пробелы или знаки табуляции
+        regex r(R"(^\)[ \s]*\;$)");
+
+        //Если подстрока между круглыми скобками содержит аргументы и (в строке нет точки с запятой или точка с запятой не относится к предположительному объявлению функции)
+        if (isSubstrContainsFuncArgs(argSubstr) && (semicolonIndex == strToCheck.length() || !regex_match(afterArgSubstr, r)))
+        {
+
+            //Установить флаг, что аргументы были найдены между круглыми скобками
+            argsFoundFlag = true;
+
+            //Сохраненить позиции этих скобок
+            foundArgsBracketPos = pos;
+            break;
+        }
+    }
+    //Если аргументы были найдены
+    if (argsFoundFlag)
+    {
+        //Конец имени функции равен позиции открывающей круглой скобки
+        int nameEndPos = foundArgsBracketPos.left - 1;
+        
+        //Передвигать позицию конца имени функции влево, пока не встретится буква
+        for (; strToCheck[nameEndPos] == ' ' || strToCheck[nameEndPos] == '\t'; nameEndPos--);
+
+        //Начао имени функции равен позиции конца имени функции
+        int nameStartPos = nameEndPos;
+        
+        //Передвигать позицию начала имени функции, пока не закончится слово
+        for (; strToCheck[nameStartPos] != ' ' && strToCheck[nameStartPos] != '\t'; nameStartPos--);
+
+        //Сохранить позиции имени функции
+        return SubstrPos(nameStartPos + 1, nameEndPos + 1);
+    }
+
+    //Вернуть значение позиций по-умолчанию
+    return SubstrPos(strToCheck.length(), strToCheck.length());
 }
 
 list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching)
@@ -565,4 +620,68 @@ list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching)
     }
     //Вернуть список позиций всех пар правильно расставленных круглых скобок
     return allBracketsPosList;
+}
+
+
+bool isSubstrContainsFuncArgs(string substr)
+{
+    //Регулярное выражение определяющая аргумент или несколько аргументов функции в строке
+    const regex r(R"(\([^\)\n]*?[a-zA-Z_][a-zA-Z0-9_]*[ \t]+[a-zA-Z_][a-zA-Z0-9_]*.*?\))");
+
+    //Инициализация списка позиций строковых констант
+    list<SubstrPos> marksIndexes;
+
+
+    int startSearching = 0;
+
+    //Пока в строке найдена кавычка
+    while (getSubstrPositionOrDefaultValue(substr, "\"", startSearching) != substr.length())
+    {
+        //Найти позиции строковой константы
+        SubstrPos pos = findPairStrConstPositions(substr, startSearching);
+
+        //Сохранить найденные позиции
+        marksIndexes.push_back(pos);
+
+        //Установить начало поиска равное позиции следующей после индекса закрывающей кавычки
+        startSearching = pos.right + 1;
+    }
+
+    startSearching = 0;
+    //Поиск позиции точки с запятой в строке
+    int semicolonIndex = getSubstrPositionOrDefaultValue(substr, ";", startSearching);
+
+    //Пока в строке найдена точка с запятой
+    while (semicolonIndex != substr.length())
+    {
+        //Если точка с запятой не находится внутри строковой константы
+        if (!isSemicolonInStrConst(marksIndexes, semicolonIndex))
+        {
+            return false;
+        }
+        //Установить начало поиска равное позиции следующей после индекса точки с запятой
+        startSearching = semicolonIndex + 1;
+
+        //Найти новую позицию точки с запятой
+        semicolonIndex = getSubstrPositionOrDefaultValue(substr, ";", startSearching);
+    }
+
+    //Результат функции положителен если длина подстркои с аргументами равна 2 или соответствует маски регулярного выражения
+    return substr.length() == 2 || regex_match(substr, r);
+}
+
+
+
+bool isSemicolonInStrConst(list<SubstrPos> strConstIndexes, int semicolonIndex)
+{
+    //Для каждой пары позиций из списка
+    for (SubstrPos pos : strConstIndexes)
+    {
+        //Если позиция точки с запятой находится в строковой константе
+        if (semicolonIndex >= pos.left && semicolonIndex < pos.right)
+        {
+            return true;
+        }
+    }
+    return false;
 }

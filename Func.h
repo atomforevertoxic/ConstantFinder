@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <fstream>
+#include <regex>
 #include <string>
 
 using namespace std;
@@ -225,6 +226,23 @@ SubstrPos getFuncNamePosition(const string& strToCheck, int startSearching);
 * \return - все позиции парных круглых скобок
 */
 list<SubstrPos> getAllBracketsPos(const string& strToSearch, int startSearching);
+
+
+
+/*! Определение, содержит ли подстрока аргументы функции
+* \param[in] substr - подстрока, в которой происходит поиск аргументов
+* \return - логический результат поиска аргументов функции в подстроке
+*/
+bool isSubstrContainsFuncArgs(string substr);
+
+
+
+/*! Определение, содержит ли подстрока аргументы функции
+* \param[in] strConstIndexes - список позиций всех строковых констант в строке
+* \param[in] semicolonIndex - индекс точки с запятой, данной для рассмотрения
+* \return - логический результат присутствия данной точки с запятой в строковой константе
+*/
+bool isSemicolonInStrConst(list<SubstrPos> strConstIndexes, int semicolonIndex);
 
 
 

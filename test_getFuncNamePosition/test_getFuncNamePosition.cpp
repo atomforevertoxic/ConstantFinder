@@ -15,8 +15,8 @@ namespace testgetFuncNamePosition
 			string str = "int getInt(int a){";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(4, 10);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(soloSymbolFuncName)
@@ -24,8 +24,8 @@ namespace testgetFuncNamePosition
 			string str = "void a(){";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(5, 6);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(userReturnTypeFunc)
@@ -33,8 +33,8 @@ namespace testgetFuncNamePosition
 			string str = "SubstrPos getPos()";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(10, 16);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(userTypeObjectInArgs)
@@ -42,8 +42,8 @@ namespace testgetFuncNamePosition
 			string str = "string getStrByPos(SubstrPos pos, int y)";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(7, 18);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(assignDefaultValueForArg)
@@ -51,8 +51,8 @@ namespace testgetFuncNamePosition
 			string str = "int returnValue(int y = 0)";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(4, 15);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(assignDefaultStrValueForArg)
@@ -60,8 +60,8 @@ namespace testgetFuncNamePosition
 			string str = "string str(string stttr = \"str\")";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(7, 10);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(severalArgsInFunc)
@@ -69,8 +69,8 @@ namespace testgetFuncNamePosition
 			string str = "int y1(int y, int x, int z)";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(4, 6);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(noArgsFunc)
@@ -78,8 +78,8 @@ namespace testgetFuncNamePosition
 			string str = "void getVoid()";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(5, 12);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(redefiningStandartOperator)
@@ -87,8 +87,8 @@ namespace testgetFuncNamePosition
 			string str = "bool operator < (const Cl1 &other)";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(14, 15);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(staticFunc)
@@ -96,26 +96,26 @@ namespace testgetFuncNamePosition
 			string str = "static void print()";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(12, 17);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
-		TEST_METHOD(compoundOperatorInsteadFuncDeclaration) // не ловится регуляркой
+		TEST_METHOD(compoundOperatorInsteadFuncDeclaration)
 		{
 			string str = "for (int i =0; i<5; i++)";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(24, 24);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
-		TEST_METHOD(semicolonInStrConstFuncDeclarArg) // не ловится регуляркой
+		TEST_METHOD(semicolonInStrConstFuncDeclarArg)
 		{
 			string str = "void mainT(string S = \";\")";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(5, 10);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(funcDeclarInStrConst)
@@ -123,8 +123,8 @@ namespace testgetFuncNamePosition
 			string str = "string str = \"void getP()\";";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(19, 23);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(extraSpacesBetweenReturnTypeAndFuncName)
@@ -132,8 +132,8 @@ namespace testgetFuncNamePosition
 			string str = "void      getSomething(int number)";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(10, 22);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(extraSpacesBetweenFuncNameAndArgs)
@@ -141,8 +141,8 @@ namespace testgetFuncNamePosition
 			string str = "int returnThat      (std::string strToRet)";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(4, 14);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(funcCallInsteadFuncDeclaration)
@@ -150,8 +150,8 @@ namespace testgetFuncNamePosition
 			string str = "print();";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(8, 8);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(funcCallAndSpacesBetweenSemicolonAndCloseBracket)
@@ -159,8 +159,8 @@ namespace testgetFuncNamePosition
 			string str = "getAndSet()    \t  ;";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(19, 19);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(noFuncDeclarInRow)
@@ -168,8 +168,8 @@ namespace testgetFuncNamePosition
 			string str = "int number = 0;";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(15, 15);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(funcCallLikeDefaultValueInArgs)
@@ -177,8 +177,8 @@ namespace testgetFuncNamePosition
 			string str = "int checkStr(int n = pick(1,2,6))";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(4, 12);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
 
 		TEST_METHOD(funcDeclarLikeDefaultValueStringInArgs)
@@ -186,10 +186,8 @@ namespace testgetFuncNamePosition
 			string str = "int getStr(string str = \"int g()\")";
 			SubstrPos act = getFuncNamePosition(str, 0);
 			SubstrPos exp(4, 10);
-			Assert::AreEqual(act.left, exp.left);
-			Assert::AreEqual(act.right, exp.right);
+			Assert::AreEqual(exp.left, act.left);
+			Assert::AreEqual(exp.right, act.right);
 		}
-
-
 	};
 }
