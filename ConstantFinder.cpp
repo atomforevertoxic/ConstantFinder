@@ -418,80 +418,121 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
     bool isCommentedFlag = false;
 
     int curlOpenBracketsCounter = 0;
+
+    //Инициализировать стэк для хранения "пути" до константы (кроме функции)
     stack<string> globalConstantPathStack;
+
+    //Функция, в которой объявлена константа
     string constantFunction = "";
 
     int stringCounter = 0;
 
+
+    //Для каждой строки из списка
     for (string codeString : codeText)
     {
         stringCounter++;
         int startSearching = 0;
+
+        //Пока начало поиска не больше длины строки
         while (startSearching <= codeString.length())
         {
+            //Сформировать список из пар позиций всех ключевых объектов
             list<SubstrPos> allKeyObjectPositions = getAllKeyObjectsIndexes(codeString, startSearching);
+
+            //Найти минимальную пару позиций из списка
             SubstrPos minPos;
             int minSubstrIndex = minSubstrPosFromList(allKeyObjectPositions, minPos);
+
+            //Начало поиска равно позиции следующей после минимальной пары позиций
             startSearching = minPos.right + 1;
+
+            //Если минимальная пара позиций не указывает на конец строки
             if (minPos.left < codeString.length())
             {
                 switch (minSubstrIndex)
                 {
-                case 0:
-                    curlOpenBracketsCounter++;
-                    break;
-                case 1:
-                    curlOpenBracketsCounter--;
-                    if (curlOpenBracketsCounter < (globalConstantPathStack.size() + 1) && constantFunction != "")
-                    {
-                        constantFunction = "";
-                    }
-                    else if (curlOpenBracketsCounter < (globalConstantPathStack.size() + 1))
-                    {
-                        globalConstantPathStack.pop();
-                    }
-                    break;
-                case 2:
-                    globalConstantPathStack.push(codeString.substr(minPos.left, (minPos.right - minPos.left)));
-                    break;
-                case 3:
-                    constantFunction = codeString.substr(minPos.left, (minPos.right - minPos.left));
-                    break;
-                case 4:
-                {
-                    string fullConstantPath = "";
-                    if (!constantFunction.empty())
-                    {
-                        fullConstantPath = " - " + constantFunction + ":";
-                    }
-                    else
-                    {
-                        fullConstantPath = ":";
-                    }
+                    //Если минимальная пара значение - позиции открывающей фигурной скобки
+                    case 0:
+                        //Инкрементировать счетчик открывающих фигурных скобок
+                        curlOpenBracketsCounter++;
+                        break;
 
-                    if (globalConstantPathStack.empty())
-                    {
-                        fullConstantPath = "global" + fullConstantPath;
-                    }
-                    else
-                    {
-                        stack<string> stackToMakePath = globalConstantPathStack;
-                        while (!stackToMakePath.empty())
+                    //Если минимальная пара значение - позиции закрывающей фигурной скобки
+                    case 1:
+                        //Декрементировать счетчик открывающих фигурных скобок
+                        curlOpenBracketsCounter--;
+
+                        //Если кол-во открывающих фигурных скобок меньше суммы кол-ва классов и функции, которым принадлежит строка, и функция определена
+                        if (curlOpenBracketsCounter < (globalConstantPathStack.size() + 1) && constantFunction != "")
                         {
-                            fullConstantPath = " - " + stackToMakePath.top() + fullConstantPath;
-                            stackToMakePath.pop();
+                            //Удалить имя функции
+                            constantFunction = "";
                         }
-                        fullConstantPath.erase(0, 3);
+                        //Иначе если кол-во открывающих скобко менше суммы кол-ва классов, которым принадлежит строка
+                        else if (curlOpenBracketsCounter < (globalConstantPathStack.size() + 1))
+                        {
+                            //Удалить имя последнего сохраненного класса из стэка
+                            globalConstantPathStack.pop();
+                        }
+                        break;
+
+                    //Если минимальная пара значение - позиции имени класса//структуры/объединения/пространства имен
+                    case 2:
+                        //Сохранить имя класса/структуры/объединения/пространства имен в стэк пути
+                        globalConstantPathStack.push(codeString.substr(minPos.left, (minPos.right - minPos.left)));
+                        break;
+
+                    //Если минимальная пара значение - позиции имени функции
+                    case 3:
+                        //Сохранить имя функции в соответствующую переменную
+                        constantFunction = codeString.substr(minPos.left, (minPos.right - minPos.left));
+                        break;
+
+                    //Если минимальная пара значение - позиции строковой константы
+                    case 4:
+                    {
+                        string fullConstantPath = "";
+                        //Сформировать путь до константы, используя стэк и имя функции
+                        if (!constantFunction.empty())
+                        {
+                            fullConstantPath = " - " + constantFunction + ":";
+                        }
+                        else
+                        {
+                            fullConstantPath = ":";
+                        }
+
+                        if (globalConstantPathStack.empty())
+                        {
+                            fullConstantPath = "global" + fullConstantPath;
+                        }
+                        else
+                        {
+                            stack<string> stackToMakePath = globalConstantPathStack;
+                            while (!stackToMakePath.empty())
+                            {
+                                fullConstantPath = " - " + stackToMakePath.top() + fullConstantPath;
+                                stackToMakePath.pop();
+                            }
+                            fullConstantPath.erase(0, 3);
+                        }
+
+                        //Получить строковую константу из строки
+                        string foundConstString = codeString.substr(minPos.left, (minPos.right - minPos.left));
+                        
+                        //Сохранить строковую константу и путь до нее в обекст Constant
+                        Constant fullConstantObject(fullConstantPath, stringCounter, foundConstString);
+
+                        //Добавить объект Constant в multiset
+                        allConstantAndTheirLocation.insert(fullConstantObject);
                     }
-                    string foundConstString = codeString.substr(minPos.left, (minPos.right - minPos.left));
-                    Constant fullConstantObject(fullConstantPath, stringCounter, foundConstString);
-                    allConstantAndTheirLocation.insert(fullConstantObject);
-                }
-                break;
+                    break;
                 }
             }
         }
     }
+    //Вернуть multiset объектов Constant
     return allConstantAndTheirLocation;
 }
 
@@ -499,19 +540,40 @@ multiset<Constant> findAllConstantsAndTheirLocation(list<string> codeText)
 
 list<SubstrPos>getAllKeyObjectsIndexes(string& str, int startSearching)
 {
+    //Найти позиции имени объявляемого класса
     SubstrPos classDeclarPos = getDeclarNamePosition(str, "class", startSearching); 
-    SubstrPos structDeclarPos = getDeclarNamePosition(str, "struct", startSearching); 
-    SubstrPos unionDeclarPos = getDeclarNamePosition(str, "union", startSearching);  
+
+    //Найти позиции имени объявляемой структуры
+    SubstrPos structDeclarPos = getDeclarNamePosition(str, "struct", startSearching);
+
+    //Найти позиции имени объявляемого объединения
+    SubstrPos unionDeclarPos = getDeclarNamePosition(str, "union", startSearching);
+
+    //Найти позиции имени объявляемого пространства имен
     SubstrPos namespaceDeclarPos = getDeclarNamePosition(str, "namespace", startSearching); 
+    
+    //Найти минимальную пару позиций из списка всех найденных пар
     SubstrPos minGlobalPathPartPos;
     minSubstrPosFromList({ classDeclarPos, structDeclarPos, unionDeclarPos, namespaceDeclarPos }, minGlobalPathPartPos);
+
+    //Найти позиции имени объявляемой функции
     SubstrPos funcNamePos = getFuncNamePosition(str, startSearching);
+
+    //Найти позиции строковой константы
     SubstrPos constMarkPos = findPairStrConstPositions(str, startSearching);
+    
+    //Найти позиции открывающей фигурной скобки
     int openFigIndex = getSubstrPositionOrDefaultValue(str, "{", startSearching);
     SubstrPos openFigBracket = SubstrPos(openFigIndex, openFigIndex + 1);
+    
+    //Найти позиции закрывающей фигурной скобки
     int closeFigIndex = getSubstrPositionOrDefaultValue(str, "}", startSearching);
     SubstrPos closeFigBracket = SubstrPos(closeFigIndex, closeFigIndex + 1);
+    
+    //Составить список найденных пар позиций
     list<SubstrPos> allPositions = { openFigBracket, closeFigBracket, minGlobalPathPartPos, funcNamePos, constMarkPos };
+    
+    //Вернуть список пар позиций
     return allPositions;
 }
 
@@ -628,12 +690,20 @@ int minSubstrPosFromList(list<SubstrPos> allPositions, SubstrPos& minPos)
 {
     int index = 0;
     int minIndex = 0;
+
+    //По-умолчанию минимальная пара позиций равна первой пары из списка
     minPos = *allPositions.begin();
+
+    //Для каждой пары позиций
     for (SubstrPos pos : allPositions)
     {
+        //Если левая граница предложенной пары позиций меньше левой границы минимальной пары позиций
         if (pos.left < minPos.left)
         {
+            //Предложенная пара становится минимальной
             minPos = pos;
+
+            //Запоминается позиция минимальной пары в списке
             minIndex = index;
         }
         index++;
