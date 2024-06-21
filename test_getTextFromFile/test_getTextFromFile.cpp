@@ -18,7 +18,7 @@ namespace testgetTextFromFile
 		TEST_METHOD(baseTest)
 		{
 			ErrorInfo error;
-			list<string> Text = getTextFromFile("D:\\files\\example1.cpp", error);
+			list<string> Text = getTextFromFile("D:\\testGetTextFromFile_files\\example1.cpp", error);
 			list<string> expectedText = {
 				"#include <iostream>",
 				"",
@@ -33,7 +33,7 @@ namespace testgetTextFromFile
 		TEST_METHOD(incorrectFilePath)
 		{
 			ErrorInfo error;
-			list<string> Text = getTextFromFile("D:\\file\\example2.cpp", error);
+			list<string> Text = getTextFromFile("D:\\testGetTextFromFile_file\\example2.cpp", error);
 			list<string> expectedText = {};
 			ErrorInfo expError(-1, ErrorMessage::INVALID_FILENAME_OR_FILEPATH_OR_FILE_DOES_NOT_EXIST);
 			Assert::AreEqual(((Text == expectedText)), true);
@@ -42,7 +42,7 @@ namespace testgetTextFromFile
 		TEST_METHOD(incorrectFilename)
 		{
 			ErrorInfo error;
-			list<string> Text = getTextFromFile("D:\\files\\example33.cpp", error);
+			list<string> Text = getTextFromFile("D:\\testGetTextFromFile_files\\example33.cpp", error);
 			list<string> expectedText = {};
 			ErrorInfo expError(-1, ErrorMessage::INVALID_FILENAME_OR_FILEPATH_OR_FILE_DOES_NOT_EXIST);
 			Assert::AreEqual(((Text == expectedText)), true);
@@ -51,7 +51,7 @@ namespace testgetTextFromFile
 		TEST_METHOD(emptyInputFile)
 		{
 			ErrorInfo error;
-			list<string> Text = getTextFromFile("D:\\files\\example4.cpp", error);
+			list<string> Text = getTextFromFile("D:\\testGetTextFromFile_files\\example4.cpp", error);
 			list<string> expectedText = { "" };
 			ErrorInfo expError;
 			checkFuncResult(expectedText, Text, expError, error);
@@ -59,12 +59,13 @@ namespace testgetTextFromFile
 		TEST_METHOD(singleStringFile)
 		{
 			ErrorInfo error;
-			list<string> Text = getTextFromFile("D:\\files\\example5.cpp", error);
+			list<string> Text = getTextFromFile("D:\\testGetTextFromFile_files\\example5.cpp", error);
 			list<string> expectedText = {
 				"int main(){ }"
 			};
 			ErrorInfo expError;
 			checkFuncResult(expectedText, Text, expError, error);
+
 		}
 
 		TEST_METHOD(strLimitError)

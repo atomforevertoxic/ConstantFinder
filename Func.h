@@ -86,7 +86,7 @@ list<string> getTextFromFile(const string pathAndName, ErrorInfo& error);
 * \param[in] codeText - список строк, представляющий текст кода из файла .cpp
 * \return - вектор всех найденных ошибок
 */
-vector<ErrorInfo> isInputDataValid(const list<string>& codeText);
+vector<ErrorInfo> isInputDataValid(list<string>& codeText);
 
 
 

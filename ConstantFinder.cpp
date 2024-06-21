@@ -2,6 +2,14 @@
 
 int main(int argc, char* argv[])
 {
+    //Если путь до внешнего файла не был указан
+    if (argc < 2)
+    {
+        //Вернуть код неккоректного завершения программы
+        return -1;
+    }
+
+
     //Инициализировать одиную ошибку для функции считывания текста из файла
     ErrorInfo inputError = ErrorInfo();
 
@@ -31,7 +39,7 @@ int main(int argc, char* argv[])
         makeResponseFile(constantAndTheirLocations, responseFileName);
         
         //Вернуть код неккоректного завершения программы
-        return -1;
+        return -2;
     }
 
     //Протестировать входные данные на корректность
@@ -47,7 +55,7 @@ int main(int argc, char* argv[])
         makeResponseFile(constantAndTheirLocations, responseFileName);
         
         //Вернуть код некорректного завершения программы
-        return -2;
+        return -3;
     }
 
     //Найти все константы из текста и их расположение
@@ -114,15 +122,20 @@ list<string> getTextFromFile(const string pathAndName, ErrorInfo& error)
 
 
 
-vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
+vector<ErrorInfo> isInputDataValid(list<string>& codeText)
 {
     //Инициализация массива ошибок
     vector<ErrorInfo> errors;
     bool isCommentedFlag = false;
     int stringCounter = 0;
-    //Для каджой строки текста
-    for (string codeString : codeText)
+
+    
+    list<string>::iterator textIterator;
+
+    //Для каждой строки текста
+    for (textIterator = codeText.begin();textIterator!=codeText.end(); ++textIterator)
     {
+        string codeString = *textIterator;
         stringCounter++;
         //Если ранее был установлен флаг кооментированностит след. строки
         if (isCommentedFlag)
@@ -137,7 +150,13 @@ vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
             //Иначе
             else
             {
-                //Пропустить строку
+                //Вырезать всю строку
+                cleanSubstrBySpaces(codeString, SubstrPos(0, codeString.length() - 1));
+                
+                //Применить изменения
+                *textIterator = codeString;
+
+                //Пропустить дальнейшую проверку
                 continue;
             }
         }
@@ -190,6 +209,7 @@ vector<ErrorInfo> isInputDataValid(const list<string>& codeText)
             //Начало поиска равно значению следующему после минимального найденного индекса
             startSearching = minElemIndex+1;
         }
+        *textIterator = codeString;
     }
     //Вернуть набор найденных ошибок
     return errors;
