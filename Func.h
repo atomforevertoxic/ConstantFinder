@@ -91,7 +91,7 @@ vector<ErrorInfo> isInputDataValid(const list<string>& codeText);
 
 
 /*! Удаление всех комментариев из строки
-* \param[in][out] strToExecute - строка, в которой производится удаление
+* \param[in,out] strToExecute - строка, в которой производится удаление
 * \return - логическое значение закомментированности след. строк
 */
 bool removeAllCommentsFromString(string& strToExecute);
@@ -117,7 +117,7 @@ bool isConstFindsEarlierThanComments(const string& strToSearch, int startSearchi
 
 
 /*! Затирание подстроки пробелами
-* \param[in][out] strToExecute - строка, в которой производится затирание
+* \param[in,out] strToExecute - строка, в которой производится затирание
 * \param[in] pos - позиции затираемой подстроки
 */
 void cleanSubstrBySpaces(string& strToClean, SubstrPos pos);
@@ -214,7 +214,7 @@ SubstrPos getDeclarNamePosition(string& strToCheck, const string& keyWord, int s
 
 /*! Поиск минимального из всех позиций ключевых объектов
 * \param[in] allPositions - список позиций всех ключевых объектов
-* \param[in][out] minPos - минимальная пара позиций подстроки из списка
+* \param[in,out] minPos - минимальная пара позиций подстроки из списка
 * \return - порядковый номер пары минимальных позиций подстроки в списке
 */
 int minSubstrPosFromList(list<SubstrPos> allPositions, SubstrPos& minPos);
