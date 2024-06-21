@@ -46,7 +46,7 @@ namespace testisInputDataValid
 				"}"
 			};
 			vector<ErrorInfo> errors = isInputDataValid(Text);
-			vector<ErrorInfo> expectedErrors = { ErrorInfo(1, ErrorMessage::TEMPLATE_IS_NOT_ALLOWED_IN_CODE_TEXT) };
+			vector<ErrorInfo> expectedErrors = { ErrorInfo(1, ErrorMessage::TEMPLATE_IS_NOT_ALLOWED_IN_TEXT_CODE) };
 			checkAnswerVector(expectedErrors, errors);
 		}
 		TEST_METHOD(definePresenceError)
@@ -60,7 +60,7 @@ namespace testisInputDataValid
 				"}"
 			};
 			vector<ErrorInfo> errors = isInputDataValid(Text);
-			vector<ErrorInfo> expectedErrors = { ErrorInfo(1, ErrorMessage::THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_CODE_TEXT) };
+			vector<ErrorInfo> expectedErrors = { ErrorInfo(1, ErrorMessage::THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_TEXT_CODE) };
 			checkAnswerVector(expectedErrors, errors);
 		}
 		TEST_METHOD(typedefPresenceError)
@@ -84,7 +84,7 @@ namespace testisInputDataValid
 				"}"
 			};
 			vector<ErrorInfo> errors = isInputDataValid(Text);
-			vector<ErrorInfo> expectedErrors = { ErrorInfo(1, ErrorMessage::THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_CODE_TEXT), ErrorInfo(4, ErrorMessage::IT_IS_NOT_ALLOWED_TO_DECLARE_ALIASES_USING_A_TYPEDEF) };
+			vector<ErrorInfo> expectedErrors = { ErrorInfo(1, ErrorMessage::THE_DEFINE_DIRECTIVE_IS_NOT_ALLOWED_IN_TEXT_CODE), ErrorInfo(4, ErrorMessage::IT_IS_NOT_ALLOWED_TO_DECLARE_ALIASES_USING_A_TYPEDEF) };
 			checkAnswerVector(expectedErrors, errors);
 		}
 		TEST_METHOD(variableNameLooksLikeErrorKeyObject)
