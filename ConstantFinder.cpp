@@ -984,25 +984,35 @@ void makeResponseFile(multiset<Constant> constants, string responseFileName)
     else
     {
         bool isMultisetContainsDupl = false;
-        string lastUsedPath = "";
+        set<string> lastUsedPaths;
         //Для каждого объекта Constant
         for (Constant constant : constants)
         {
             //Если данный путь до константы еще не был записан
-            if (lastUsedPath != constant.constantLocation)
+            if (find(lastUsedPaths.begin(), lastUsedPaths.end(), constant.constantLocation)==lastUsedPaths.end())
             {
                 //Записать это путь как заголовок для констант
                 MyFile << endl;
                 MyFile << constant.constantLocation << endl;
 
-                lastUsedPath = constant.constantLocation;
+
+                for (Constant sameLocationConstant : constants)
+                {
+                    //Если путь до данной константы совпадает с путем из написанного заголовка
+                    if (sameLocationConstant.constantLocation==constant.constantLocation)
+                    {
+                        //Сформировать строку, содержащую информацию о константе
+                        string response = to_string(sameLocationConstant.constLine) + " \"" + sameLocationConstant.constString + "\"";
+
+                        //Записать строку в файл
+                        MyFile << response << endl;
+                    }
+                }
+                //Сохранение последнего записанного уникального пути до константы
+                lastUsedPaths.insert(constant.constantLocation);
             }
 
-            //Сформировать строку, содержащую информацию о константе
-            string response = to_string(constant.constLine) + " \"" + constant.constString + "\"";
 
-            //Записать строку в файл
-            MyFile << response << endl;
             
             //Если данная константа дублируется
             if (constants.count(constant) > 1)
