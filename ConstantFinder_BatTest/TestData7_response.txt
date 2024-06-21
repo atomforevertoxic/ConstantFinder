@@ -1,0 +1,6 @@
+
+global:
+5 "blablabla"
+
+global - main:
+9 "yy"

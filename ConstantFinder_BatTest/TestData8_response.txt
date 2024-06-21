@@ -1,0 +1,15 @@
+
+global:
+5 "blabla"
+
+global - main:
+14 "blabla"
+15 "blabla"
+16 "blabla"
+9 "yy"
+10 "yy"
+
+
+#duplicates:
+blabla - 4
+yy - 2

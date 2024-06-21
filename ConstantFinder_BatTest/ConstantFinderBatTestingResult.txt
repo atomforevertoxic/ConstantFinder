@@ -1,0 +1,22 @@
+ 
+01 - (ОШИБКА) Файл не существует или путь до него некорректен 
+Line - |-1|: INVALID FILENAME OR FILEPATH OR FILE DOES NOT EXIST
+ 
+02 - (ОШИБКА) Кол-во строк в файле превышает допустимый лимит 
+Line - |-1|: LINES COUNT IS OUT OF LIMIT
+ 
+03 - (ОШИБКА) В коде объявлена директива define 
+Line - |3|: THE DEFINE DIRECTIVE IS NOT ALLOWED IN TEXT CODE
+ 
+04 - (ОШИБКА) В коде объявлен псевдоним typedef 
+Line - |9|: IT IS NOT ALLOWED TO DECLARE ALIASES USING A TYPEDEF
+ 
+05 - (ОШИБКА) В коде объявлен шаблон template
+Line - |1|: TEMPLATE IS NOT ALLOWED IN TEXT CODE
+Line - |8|: TEMPLATE IS NOT ALLOWED IN TEXT CODE
+ 
+06 - На вход поступил код, который не содержит строковые константы 
+ 
+07 - На вход поступил код, который содержит НЕДУБЛИРУЮЩИЕСЯ строковые константы 
+ 
+08 - На вход поступил код, который содержит ДУБЛИРУЮЩИЕСЯ строковые константы 
